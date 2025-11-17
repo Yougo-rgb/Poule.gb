@@ -1,3 +1,14 @@
+#Gameboy
+#*.gb
+*.asm
+*.ihx
+*.lst
+*.map
+*.noi
+*.o
+*.sym
+
+
 # Prerequisites
 *.d
 
