@@ -8,7 +8,7 @@
 #define PLAYER_SPEED 2
 #define PLAYER_WIDTH 8
 #define PLAYER_HEIGHT 8
-#define PLAYER_SPRITE_START 0
+#define PLAYER_SPRITE_START 26
 
 typedef enum {
     PLAYER_IDLE,
