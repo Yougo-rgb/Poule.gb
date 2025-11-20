@@ -1,5 +1,6 @@
 #include "player.h"
 #include "audio.h"
+#include "hud.h"
 
 #define SCREEN_MIN_X 24
 #define SCREEN_MAX_X 152
@@ -23,10 +24,10 @@ void player_init(Player* player, uint8_t x, uint8_t y) {
 
 void player_update(Player* player) {
     uint8_t joypad_state = joypad();
-    bool moved = false;
+    BOOLEAN moved = FALSE;
 
     if (player->is_invincible) {
-        player->is_invincible--;
+        player->invincible_timer--;
         if (player->invincible_timer == 0) {
             player-> is_invincible = FALSE;
         }
@@ -58,6 +59,10 @@ void player_update(Player* player) {
         player->direction = DIR_DOWN;
         player->sprite_index = DIR_DOWN;
         moved = true;
+    }
+
+    if (joypad_state & J_A) {
+        player->score++;
     }
 
     if(moved) {
