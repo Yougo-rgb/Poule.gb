@@ -3,8 +3,10 @@
 #include <stdio.h>
 #include <gb/gb.h>
 
+void hud_uint_to_hex(uint16_t number, char zero_hex_value_reference, uint8_t out_hex[2]);
+
 unsigned char windowmap[] = {
-    0x1A, 0x19, 0x1F, 0x16, 0x0F, 0x00, 0x11, 0x0C
+    0x1A, 0x19, 0x1F, 0x16, 0x0F, 0x00, 0x11, 0x0C, 0x00, 0x00, 0x01, 0x01
 };
 
 static font_t min_font;
@@ -23,7 +25,7 @@ void hud_init(void) {
     min_font = font_load(font_min);
     font_set(min_font);
 
-    set_win_tiles(0, 0, 8, 1, windowmap);
+    set_win_tiles(0, 0, 12, 1, windowmap);
     move_win(7, 0);
 
     STAT_REG = 0x40;
@@ -38,5 +40,25 @@ void hud_init(void) {
 }
 
 void hud_update_score(uint16_t score) {
-    // 
+	uint8_t score_hex[2];
+	
+	hud_uint_to_hex(score, 1, score_hex);
+	
+    unsigned char windowmap[] = {
+        0x1A, 0x19, 0x1F, 0x16, 0x0F, 0x00, 0x11, 0x0C, 0x00, 0x00, score_hex[0], score_hex[1]
+    };
+    set_win_tiles(0, 0, 12, 1, windowmap);
+    move_win(7, 0);
+}
+
+void hud_uint_to_hex(uint16_t number, char zero_hex_value_reference, uint8_t out_hex[2]) {
+
+    uint8_t unit_digit = number % 10;
+    uint8_t decimal_digit = (number / 10) % 10;
+
+    uint8_t digits[2] = { decimal_digit, unit_digit };
+
+    for (int i = 0; i < 2; i++) {
+        out_hex[i] = digits[i] + zero_hex_value_reference;
+    }
 }

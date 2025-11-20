@@ -61,10 +61,6 @@ void player_update(Player* player) {
         moved = true;
     }
 
-    if (joypad_state & J_A) {
-        player->score++;
-    }
-
     if(moved) {
         player->state = PLAYER_WALKING;
         static uint8_t step_counter = 0;
@@ -100,6 +96,8 @@ void player_take_damage(Player* player, uint8_t damage) {
 
 void player_add_score(Player* player, uint8_t points) {
     player->score += points;
+
+    hud_update_score(player->score);
 
     /* audio_play_sfx(...) */
 }
