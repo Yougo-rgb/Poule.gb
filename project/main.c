@@ -22,6 +22,19 @@
 
 Player player;
 ItemManager item_manager;
+UBYTE x, y;
+UWORD seed;
+
+void new_rand_x_y_pos(BOOLEAN is_first_time) {
+    if(is_first_time){
+        waitpad(0xFF);
+        waitpadup();
+    }
+    seed = DIV_REG;
+    initarand(seed);
+    x = rand();
+    y = arand();
+}
 
 void new_rand_egg( UBYTE x, UBYTE y) {
     item_spawn(&item_manager, x, y, ITEM_EGG, 1);
@@ -34,13 +47,7 @@ void on_item_collected(ItemType type, uint8_t value, uint8_t item_index) {
             /* audio_play_sfx(...) */
             item_remove(&item_manager, item_index);
 
-            UBYTE x, y;
-            UWORD seed;
-            puts("");
-            seed = DIV_REG;
-            initarand(seed);
-            x = rand();
-            y = arand();
+            new_rand_x_y_pos(FALSE);
             x = x % (SCREEN_MAX_X - SCREEN_MIN_X);
             y = y % (SCREEN_MAX_Y - SCREEN_MIN_Y);
 
@@ -59,16 +66,7 @@ void init_game(void) {
     set_bkg_data(38, 11, backTile);
     set_bkg_submap(0, 0, 20, 18, backMap, 20);
     
-    UBYTE x, y;
-    UWORD seed;
-    puts("");
-    waitpad(0xFF);
-    waitpadup();
-    seed = DIV_REG;
-    initarand(seed);
-    x = rand();
-    y = arand();
-
+    new_rand_x_y_pos(TRUE);
     x = x % (SCREEN_MAX_X - SCREEN_MIN_X);
     y = y % (SCREEN_MAX_Y - SCREEN_MIN_Y);
 
