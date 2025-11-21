@@ -24,7 +24,7 @@ void item_spawn(ItemManager* manager, uint8_t x, uint8_t y, ItemType type, uint8
             
             switch(type) {
                 case ITEM_EGG:
-                    manager->items[i].sprite_tile = SPRITE_EGG;
+                    manager->items[i].sprite_tile = SPRITE_EGG + (x % 4);
                     break;
 
                 default:

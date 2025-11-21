@@ -97,8 +97,6 @@ void player_take_damage(Player* player, uint8_t damage) {
 void player_add_score(Player* player, uint8_t points) {
     player->score += points;
 
-    hud_update_score(player->score);
-
     /* audio_play_sfx(...) */
 }
 

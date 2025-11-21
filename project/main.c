@@ -14,6 +14,7 @@
 //#include "./assets/Character.c"
 #include "./assets/ChickenLittle.c"
 #include "./assets/EggLittle.c"
+#include "./assets/CustomFont.c"
 
 #define SCREEN_MIN_X 24
 #define SCREEN_MAX_X 152
@@ -25,6 +26,7 @@ ItemManager item_manager;
 UBYTE x, y;
 UWORD seed;
 BOOLEAN is_game_playing;
+uint8_t goal_score;
 
 void new_rand_x_y_pos(void) {
     seed = DIV_REG;
@@ -41,13 +43,13 @@ void on_item_collected(ItemType type, uint8_t value, uint8_t item_index) {
     switch(type) {
         case ITEM_EGG:
             player_add_score(&player, value);
+            hud_update_score(player.score, goal_score);
             /* audio_play_sfx(...) */
             item_remove(&item_manager, item_index);
 
             new_rand_x_y_pos();
             x = x % (SCREEN_MAX_X - SCREEN_MIN_X);
             y = y % (SCREEN_MAX_Y - SCREEN_MIN_Y);
-
             new_rand_egg(x + SCREEN_MIN_X, y + SCREEN_MIN_Y);
             break;
         default:
@@ -68,6 +70,8 @@ void init_game(void) {
     
     set_sprite_data(4, 4, EggLittleSprite);
     item_manager_init(&item_manager);
+
+    set_bkg_data(53, 8, CustomFont);
 
     SHOW_BKG;
     SHOW_SPRITES;  
@@ -90,6 +94,7 @@ void start_game(void) {
     new_rand_x_y_pos();
     x = x % (SCREEN_MAX_X - SCREEN_MIN_X);
     y = y % (SCREEN_MAX_Y - SCREEN_MIN_Y);
+    goal_score = (x % 10) + 5;
     new_rand_egg(x + SCREEN_MIN_X, y + SCREEN_MIN_Y);
 }
 
@@ -120,7 +125,7 @@ void main(void) {
         if (is_game_playing) {
             update_game();
             render_game();
-            if (player.score >= (x % 10) + 5) {
+            if (player.score >= goal_score) {
                 is_game_playing= FALSE;
             } 
             vsync();
