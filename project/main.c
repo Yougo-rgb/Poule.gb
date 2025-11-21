@@ -24,12 +24,9 @@ Player player;
 ItemManager item_manager;
 UBYTE x, y;
 UWORD seed;
+BOOLEAN is_game_playing;
 
-void new_rand_x_y_pos(BOOLEAN is_first_time) {
-    if(is_first_time){
-        waitpad(0xFF);
-        waitpadup();
-    }
+void new_rand_x_y_pos(void) {
     seed = DIV_REG;
     initarand(seed);
     x = rand();
@@ -47,7 +44,7 @@ void on_item_collected(ItemType type, uint8_t value, uint8_t item_index) {
             /* audio_play_sfx(...) */
             item_remove(&item_manager, item_index);
 
-            new_rand_x_y_pos(FALSE);
+            new_rand_x_y_pos();
             x = x % (SCREEN_MAX_X - SCREEN_MIN_X);
             y = y % (SCREEN_MAX_Y - SCREEN_MIN_Y);
 
@@ -59,30 +56,41 @@ void on_item_collected(ItemType type, uint8_t value, uint8_t item_index) {
 }
 
 void init_game(void) {
-    
+
     audio_init();
     hud_init();
     
     set_bkg_data(38, 11, backTile);
     set_bkg_submap(0, 0, 20, 18, backMap, 20);
     
-    new_rand_x_y_pos(TRUE);
-    x = x % (SCREEN_MAX_X - SCREEN_MIN_X);
-    y = y % (SCREEN_MAX_Y - SCREEN_MIN_Y);
-
-    hud_default();
-    
     set_sprite_data(0, 4, chickenLittleSprite);
     player_init(&player, 88, 80);
     
     set_sprite_data(4, 4, EggLittleSprite);
     item_manager_init(&item_manager);
-    new_rand_egg(x + SCREEN_MIN_X, y + SCREEN_MIN_Y);
 
     SHOW_BKG;
     SHOW_SPRITES;  
     SHOW_WIN;  
     DISPLAY_ON;
+}
+
+void reset_game(void) { 
+    is_game_playing = FALSE;
+    item_manager_init(&item_manager);
+    hud_default();
+}
+
+void start_game(void) {
+    is_game_playing = TRUE;
+
+    hud_default();
+    player_init(&player, 88, 80);
+
+    new_rand_x_y_pos();
+    x = x % (SCREEN_MAX_X - SCREEN_MIN_X);
+    y = y % (SCREEN_MAX_Y - SCREEN_MIN_Y);
+    new_rand_egg(x + SCREEN_MIN_X, y + SCREEN_MIN_Y);
 }
 
 void update_game(void) {
@@ -106,12 +114,21 @@ void render_game(void) {
 
 void main(void) {
     init_game();
-
-    while(1){
-        update_game();
-        render_game();
-
-        vsync();
+    waitpad(0xFF);
+    waitpadup();
+    while(1) {
+        if (is_game_playing) {
+            update_game();
+            render_game();
+            if (player.score >= (x % 10) + 5) {
+                is_game_playing= FALSE;
+            } 
+            vsync();
+        } else {
+            reset_game();
+            waitpad(0xFF);
+            start_game();
+        }
     }
 
 }
