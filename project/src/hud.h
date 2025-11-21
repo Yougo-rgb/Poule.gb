@@ -5,6 +5,7 @@
 #include <stdint.h>
 
 void hud_init(void);
+void hud_default(void);
 void hud_update_score(uint16_t score);
 
 #endif
