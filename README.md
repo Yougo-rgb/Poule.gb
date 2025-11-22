@@ -1,5 +1,9 @@
 # Poule.gb  
-A small Game Boy game about a chicken, made with **GBDK** and love.
+A small Game Boy game about a poule, made with **GBDK** and love.  
+The gameplay is simple: you are a poule and you need to eat œufs.  
+How many œufs do you have to eat? **Random**.  
+Where do they appear? **Random**.  
+Oh, and also… good lucky luck to you!
 
 <div align="center">
   
@@ -10,12 +14,15 @@ A small Game Boy game about a chicken, made with **GBDK** and love.
 ---
 
 ## 🎮 Playing
-You can try the game directly in your browser on the Poule.gb itch.io page:  
+You can play the game directly in your browser on the Poule.gb itch.io page:  
 👉 https://yougo07.itch.io/poulegb
+
+Or you can download the latest version of the game from the releases page:  
+👉 https://github.com/Yougo-rgb/Poule.gb/releases
 
 ---
 
-## 🚀 Installation (Windows)
+## 🚀 Installation and compilation (Windows)
 
 ### 1. Install GBDK  
 Download the latest version of **GBDK-2020** here:  
@@ -28,7 +35,7 @@ Download the latest version of **GBDK-2020** here:
 Move the extracted **gbdk** folder to: `C:\`
 
 
-Doing so allows you to compile the project without modifying `make.bat`.
+This allows you to compile the project without modifying `make.bat`.
 
 ### 3. Compile the project  
 Open a terminal in the project folder and run:
@@ -49,6 +56,9 @@ Poule.gb is actually my first game project ever! (And also the first featuring p
 ## 👤 Author
 - [Pozzi Hugo](https://github.com/Yougo-rgb)
 
+## 🐔 Special thanks to the initial creator of poule.py
+- [StroyII](https://github.com/StroyII)
+
 ## Egg
 
 ### 1. Egg
@@ -56,7 +66,7 @@ Poule.gb is actually my first game project ever! (And also the first featuring p
   
 ![Egg](./artwork/egg.png)
 
-**_egg_**
+**_eggcellent_**
 
 </div>
 
