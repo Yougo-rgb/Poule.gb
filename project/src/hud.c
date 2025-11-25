@@ -3,8 +3,6 @@
 #include <stdio.h>
 #include <gb/gb.h>
 
-void hud_uint_to_hex(uint16_t number, char zero_hex_value_reference, uint8_t out_hex[2]);
-
 
 static font_t min_font;
 
@@ -72,7 +70,7 @@ void hud_update_score(uint8_t score, uint8_t goal) {
     move_win(7, 0);
 }
 
-void hud_uint_to_hex(uint16_t number, char zero_hex_value_reference, uint8_t out_hex[2]) {
+void hud_uint_to_hex(uint8_t number, char zero_hex_value_reference, uint8_t out_hex[2]) {
 
     uint8_t unit_digit = number % 10;
     uint8_t decimal_digit = (number / 10) % 10;

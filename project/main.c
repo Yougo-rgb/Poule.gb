@@ -9,7 +9,8 @@
 #include "src/player.h"
 #include "src/item.h"
 
-#include "./assets/Background.c"
+// #include "./assets/Background.c"
+#include "./assets/CompBackground.c"
 #include "./assets/BackgroundTile.c"
 //#include "./assets/Character.c"
 #include "./assets/ChickenLittle.c"
@@ -27,6 +28,7 @@ UBYTE x, y;
 UWORD seed;
 BOOLEAN is_game_playing;
 uint8_t goal_score;
+unsigned char decompressed_map[360];
 
 void new_rand_x_y_pos(void) {
     seed = DIV_REG;
@@ -57,13 +59,32 @@ void on_item_collected(ItemType type, uint8_t value, uint8_t item_index) {
     }
 }
 
+void decompress_map(DataPoint arr[], int arr_size) {
+    int map_index = 0;
+    for (int i = 0; i < arr_size; i++) {
+        unsigned char value = arr[i].value;
+        int count = arr[i].count;
+
+        for (int j = 0; j < count; j++) {
+            if (map_index < arr_size) {
+                decompressed_map[map_index++] = value;
+            } else {
+                break;
+            }
+        }
+    }
+}
+
 void init_game(void) {
 
     audio_init();
     hud_init();
     
     set_bkg_data(38, 11, backTile);
-    set_bkg_submap(0, 0, 20, 18, backMap, 20);
+
+    decompress_map(dataList, 360);
+
+    set_bkg_submap(0, 0, 20, 18, decompressed_map, 20);
     
     set_sprite_data(0, 4, chickenLittleSprite);
     player_init(&player, 88, 80);
@@ -128,12 +149,12 @@ void main(void) {
             if (player.score >= goal_score) {
                 is_game_playing= FALSE;
             } 
-            vsync();
         } else {
             reset_game();
             waitpad(0xFF);
             start_game();
         }
+        vsync();
     }
 
 }
