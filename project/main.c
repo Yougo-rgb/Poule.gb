@@ -12,7 +12,7 @@
 // #include "./assets/Background.c"
 #include "./assets/CompBackground.c"
 #include "./assets/BackgroundTile.c"
-//#include "./assets/Character.c"
+// #include "./assets/Character.c"
 #include "./assets/ChickenLittle.c"
 #include "./assets/EggLittle.c"
 #include "./assets/CustomFont.c"
@@ -22,6 +22,12 @@
 #define SCREEN_MIN_Y 56
 #define SCREEN_MAX_Y 128
 
+typedef struct {
+    uint8_t collected;
+    uint32_t frame_started;
+    uint32_t frame_collected;
+} GameObject;
+
 Player player;
 ItemManager item_manager;
 UBYTE x, y;
@@ -29,6 +35,8 @@ UWORD seed;
 BOOLEAN is_game_playing;
 uint8_t goal_score;
 unsigned char decompressed_map[360];
+uint32_t frames_elapsed = 0;
+GameObject time;
 
 void new_rand_x_y_pos(void) {
     seed = DIV_REG;
@@ -57,6 +65,11 @@ void on_item_collected(ItemType type, uint8_t value, uint8_t item_index) {
         default:
             break;
     }
+}
+
+uint32_t calculed_time_score(void) {
+    uint32_t seconds = time.frame_collected / 60;
+    return seconds;
 }
 
 void decompress_map(DataPoint arr[], int arr_size) {
@@ -115,7 +128,8 @@ void start_game(void) {
     new_rand_x_y_pos();
     x = x % (SCREEN_MAX_X - SCREEN_MIN_X);
     y = y % (SCREEN_MAX_Y - SCREEN_MIN_Y);
-    goal_score = (x % 10) + 5;
+    goal_score = 50;
+    time.frame_started = frames_elapsed;  
     new_rand_egg(x + SCREEN_MIN_X, y + SCREEN_MIN_Y);
 }
 
@@ -142,11 +156,17 @@ void main(void) {
     init_game();
     waitpad(0xFF);
     waitpadup();
+    printf("\n"); // TODO: Create a real interface
     while(1) {
         if (is_game_playing) {
             update_game();
             render_game();
             if (player.score >= goal_score) {
+                time.frame_collected = frames_elapsed - time.frame_started;
+                fill_bkg_rect(0, 1, 31, 1, 0); // TODO: Create a real interface
+                printf("%d",calculed_time_score()); // TODO: Create a real interface
+                waitpad(0xFF);
+                waitpadup();
                 is_game_playing= FALSE;
             } 
         } else {
@@ -154,7 +174,8 @@ void main(void) {
             waitpad(0xFF);
             start_game();
         }
-        vsync();
+        wait_vbl_done();
+        frames_elapsed++;
     }
 
 }
